@@ -181,9 +181,17 @@ export class TodoComponent implements OnInit {
 
     saveDescription(): void {
         if (!this.editingTodo) return;
+
         const todos = this.todosSubject.value.map((t) =>
-            t.id === this.editingTodo!.id ? { ...t, description: this.editingDescription } : t
+            t.id === this.editingTodo!.id
+                ? {
+                      ...t,
+                      description: this.editingDescription,
+                      title: this.editingDescription, // <- also update title if you want
+                  }
+                : t
         );
+
         this.todosSubject.next(todos);
         this.closeSidebar();
     }
