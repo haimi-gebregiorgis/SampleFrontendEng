@@ -22,7 +22,7 @@ interface SortState {
     styleUrls: ['./todo.component.scss'],
 })
 export class TodoComponent implements OnInit {
-    // ---- filters form ----
+    // filters form 
     filterForm!: FormGroup;
 
     get fromCtrl(): FormControl {
@@ -33,7 +33,7 @@ export class TodoComponent implements OnInit {
         return this.filterForm.get('to') as FormControl;
     }
 
-    // ---- core state streams ----
+    // core state streams 
     private todosSubject = new BehaviorSubject<ITodo[]>([]);
     todos$ = this.todosSubject.asObservable();
 
@@ -80,7 +80,7 @@ export class TodoComponent implements OnInit {
         })
     );
 
-    // ---- selection & UI state ----
+    // selection & UI state 
     selectedIds = new Set<number>();
     allChecked = false;
 
@@ -108,7 +108,7 @@ export class TodoComponent implements OnInit {
         });
     }
 
-    // ---- filters ----
+    // filters 
 
     applyFilters(): void {
         const raw = this.filterForm.value;
@@ -122,7 +122,7 @@ export class TodoComponent implements OnInit {
         this.filterSubject.next({ from: null, to: null });
     }
 
-    // ---- sorting ----
+    // sorting 
 
     setSort(key: SortKey): void {
         const current = this.sortSubject.value;
@@ -137,7 +137,7 @@ export class TodoComponent implements OnInit {
         return s.key === key && s.direction === dir;
     }
 
-    // ---- selection ----
+    // selection 
 
     toggleSelect(todo: ITodo, checked: boolean): void {
         if (checked) {
@@ -166,7 +166,7 @@ export class TodoComponent implements OnInit {
         this.allChecked = todos.length > 0 && todos.every((t) => this.selectedIds.has(t.id));
     }
 
-    // ---- sidebar / description editing ----
+    //  sidebar and description update
 
     openSidebar(todo: ITodo): void {
         this.editingTodo = todo;
@@ -196,7 +196,7 @@ export class TodoComponent implements OnInit {
         this.closeSidebar();
     }
 
-    // ---- delete ----
+    //    delete
 
     deleteTodo(todo: ITodo): void {
         const todos = this.todosSubject.value.filter((t) => t.id !== todo.id);
@@ -205,7 +205,7 @@ export class TodoComponent implements OnInit {
         this.syncAllChecked();
     }
 
-    // ---- util ----
+    //    util
 
     formatDate(date: Date): string {
         const d = new Date(date);

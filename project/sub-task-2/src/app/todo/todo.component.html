@@ -1,5 +1,5 @@
 <div class="page">
-    <!-- DESKTOP / TABLET LAYOUT -->
+    <!-- large devices -->
     <div class="card" [class.blur]="isSidebarOpen || showMobileFilters">
         <div class="filters-header desktop-only">
             <div class="filters-title">Creation Date</div>
@@ -14,12 +14,12 @@
             </div>
         </div>
 
-        <!-- MOBILE FILTER BUTTON -->
+        <!-- mobile btn -->
         <div class="mobile-only mobile-filters-toggle">
             <button class="btn btn-primary" (click)="showMobileFilters = true">FILTERS</button>
         </div>
 
-        <!-- TABLE HEADER -->
+        <!-- list header-->
         <div class="list-header">
             <div class="cell checkbox-cell">
                 <input
@@ -51,7 +51,7 @@
             <div class="cell delete-cell"></div>
         </div>
 
-        <!-- TABLE ROWS -->
+        <!-- list -->
         <div
             class="list-row"
             *ngFor="let todo of (displayedTodos$ | async) || []"
@@ -84,7 +84,7 @@
         </div>
     </div>
 
-    <!-- EDIT SIDEBAR -->
+    <!-- sidebar -->
     <div class="sidebar" *ngIf="isSidebarOpen">
         <div class="sidebar-header">
             <h3>Description</h3>
@@ -100,7 +100,7 @@
         </div>
     </div>
 
-    <!-- MOBILE FILTER PANEL -->
+    <!-- mobile filter -->
     <div class="mobile-filters-panel" *ngIf="showMobileFilters">
         <div class="mobile-filters-header">
             <span class="title">FILTERS</span>

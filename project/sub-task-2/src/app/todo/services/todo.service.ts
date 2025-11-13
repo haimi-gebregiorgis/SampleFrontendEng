@@ -62,8 +62,6 @@ export class TodoService extends TodoBaseService {
         );
     }
 
-    // --------- Abstract methods implementation ---------
-
     override setTodos(todos: ITodo[]): void {
         this.todosSubject.next([...todos]);
     }
@@ -82,8 +80,6 @@ export class TodoService extends TodoBaseService {
         const current = this.todosSubject.value;
         this.todosSubject.next(current.map((t) => (t.id === todo.id ? { ...t, ...todo } : t)));
     }
-
-    // --------- Helpers ---------
 
    private  randomDate(start: Date, end: Date): Date {
         const startMs = start.getTime();
