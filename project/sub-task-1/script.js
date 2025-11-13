@@ -120,7 +120,7 @@
           >
             ✏️
           </button>
-          <span class="todo-title">${todo.title}</span>
+          <span class="todo-title">${todo.description}</span>
         </div>
         <div class="cell date-cell">
           ${formatDate(todo.creationDate)}
@@ -233,10 +233,26 @@
 
   function saveDescription() {
     if (state.editingTodoId == null) return;
+
     const newText = dom.descriptionInput.value || "";
-    state.todos = state.todos.map((t) =>
-      t.id === state.editingTodoId ? { ...t, description: newText } : t
+    console.log(
+      "Saving description for id",
+      state.editingTodoId,
+      "=>",
+      newText
     );
+
+    state.todos = state.todos.map((t) =>
+      t.id === state.editingTodoId
+        ? {
+            ...t,
+            description: newText,
+            title: newText, // keep title in sync with description
+          }
+        : t
+    );
+
+    render(); // refresh UI
     closeSidebar();
   }
 
@@ -372,7 +388,10 @@
 
     document
       .getElementById("save-description-btn")
-      .addEventListener("click", saveDescription);
+      .addEventListener("click", (e) => {
+        e.preventDefault(); // in case inside a form
+        saveDescription();
+      });
 
     // Desktop filters
     document
