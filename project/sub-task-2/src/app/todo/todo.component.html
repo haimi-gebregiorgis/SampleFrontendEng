@@ -1,0 +1,126 @@
+<div class="page">
+    <!-- DESKTOP / TABLET LAYOUT -->
+    <div class="card" [class.blur]="isSidebarOpen || showMobileFilters">
+        <div class="filters-header desktop-only">
+            <div class="filters-title">Creation Date</div>
+            <div class="filters-range">
+                <input type="date" class="date-input" [formControl]="fromCtrl" />
+                ...
+                <input type="date" class="date-input" [formControl]="toCtrl" />
+            </div>
+            <div class="filters-buttons">
+                <button class="btn btn-primary" (click)="applyFilters()">APPLY</button>
+                <button class="btn btn-secondary" (click)="resetFilters()">RESET</button>
+            </div>
+        </div>
+
+        <!-- MOBILE FILTER BUTTON -->
+        <div class="mobile-only mobile-filters-toggle">
+            <button class="btn btn-primary" (click)="showMobileFilters = true">FILTERS</button>
+        </div>
+
+        <!-- TABLE HEADER -->
+        <div class="list-header">
+            <div class="cell checkbox-cell">
+                <input
+                    type="checkbox"
+                    [checked]="allChecked"
+                    (change)="toggleSelectAll($event.target.checked)"
+                />
+            </div>
+            <div class="cell name-cell clickable" (click)="setSort('title')">
+                <span>Name</span>
+                <span class="sort-indicator">
+                    <span class="arrow up" [class.active]="isSortedBy('title', 'asc')"></span>
+                    <span class="arrow down" [class.active]="isSortedBy('title', 'desc')"></span>
+                </span>
+            </div>
+            <div class="cell date-cell clickable" (click)="setSort('creationDate')">
+                <span>Creation Date</span>
+                <span class="sort-indicator">
+                    <span
+                        class="arrow up"
+                        [class.active]="isSortedBy('creationDate', 'asc')"
+                    ></span>
+                    <span
+                        class="arrow down"
+                        [class.active]="isSortedBy('creationDate', 'desc')"
+                    ></span>
+                </span>
+            </div>
+            <div class="cell delete-cell"></div>
+        </div>
+
+        <!-- TABLE ROWS -->
+        <div
+            class="list-row"
+            *ngFor="let todo of (displayedTodos$ | async) || []"
+            [class.completed]="todo.completed"
+        >
+            <div class="cell checkbox-cell">
+                <input
+                    type="checkbox"
+                    [checked]="isSelected(todo)"
+                    (change)="toggleSelect(todo, $event.target.checked)"
+                />
+            </div>
+
+            <div class="cell name-cell">
+                <button type="button" class="icon-button edit-icon" (click)="openSidebar(todo)">
+                    ✏️
+                </button>
+                <span class="todo-title">{{ todo.title }}</span>
+            </div>
+
+            <div class="cell date-cell">
+                {{ formatDate(todo.creationDate) }}
+            </div>
+
+            <div class="cell delete-cell">
+                <button type="button" class="icon-button delete-icon" (click)="deleteTodo(todo)">
+                    🗑
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT SIDEBAR -->
+    <div class="sidebar" *ngIf="isSidebarOpen">
+        <div class="sidebar-header">
+            <h3>Description</h3>
+            <button type="button" class="btn btn-secondary close-btn" (click)="closeSidebar()">
+                ✕ CLOSE
+            </button>
+        </div>
+
+        <textarea class="description-input" [(ngModel)]="editingDescription" rows="10"></textarea>
+
+        <div class="sidebar-actions">
+            <button class="btn btn-primary" (click)="saveDescription()">💾 SAVE</button>
+        </div>
+    </div>
+
+    <!-- MOBILE FILTER PANEL -->
+    <div class="mobile-filters-panel" *ngIf="showMobileFilters">
+        <div class="mobile-filters-header">
+            <span class="title">FILTERS</span>
+            <button class="icon-button close-icon" (click)="showMobileFilters = false">✕</button>
+        </div>
+
+        <div class="mobile-filters-body">
+            <label class="field-label">Creation Date</label>
+            <input type="date" class="date-input" [formControl]="fromCtrl" />
+
+            <input type="date" class="date-input" [formControl]="toCtrl" />
+        </div>
+
+        <div class="mobile-filters-actions">
+            <button class="btn btn-primary" (click)="applyFilters(); showMobileFilters = false">
+                APPLY
+            </button>
+            <button class="btn btn-secondary" (click)="resetFilters(); showMobileFilters = false">
+                RESET
+            </button>
+        </div>
+    </div>
+</div>

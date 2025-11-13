@@ -1,0 +1,18 @@
+.btn {
+    --btn-color: #000;
+    --btn-bg: transparent;
+    --btn-color-hover: transparent;
+    --btn-bg-hover: transparent;
+
+    color: var(--btn-color);
+    background-color: var(--btn-bg);
+    display: inline-block;
+    &:focus {}
+    &:hover {}
+    /*...*/
+
+    &--primary {
+        /*...*/
+    }
+}
+
