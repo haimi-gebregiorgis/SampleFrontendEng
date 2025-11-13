@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder,FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { ITodo } from './models/todo.interface';
-import { TodoService } from './services/todo-base.service';
+import { TodoService } from './services/todo.service'; // make sure this exists
 
 type SortKey = 'title' | 'creationDate';
 type SortDirection = 'asc' | 'desc';
@@ -18,15 +17,12 @@ interface SortState {
 @Component({
     selector: 'app-todo',
     standalone: true,
-    imports: [
-        CommonModule, // *ngIf, *ngFor, async pipe
-        ReactiveFormsModule, // [formControl]
-        FormsModule, // [(ngModel)]
-    ],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule],
     templateUrl: './todo.component.html',
     styleUrls: ['./todo.component.scss'],
 })
 export class TodoComponent implements OnInit {
+    // ---- filters form ----
     filterForm!: FormGroup;
 
     get fromCtrl(): FormControl {
@@ -36,7 +32,8 @@ export class TodoComponent implements OnInit {
     get toCtrl(): FormControl {
         return this.filterForm.get('to') as FormControl;
     }
-    // state streams
+
+    // ---- core state streams ----
     private todosSubject = new BehaviorSubject<ITodo[]>([]);
     todos$ = this.todosSubject.asObservable();
 
@@ -83,7 +80,7 @@ export class TodoComponent implements OnInit {
         })
     );
 
-    // selection & editing
+    // ---- selection & UI state ----
     selectedIds = new Set<number>();
     allChecked = false;
 
@@ -96,21 +93,22 @@ export class TodoComponent implements OnInit {
     constructor(private todoService: TodoService, private fb: FormBuilder) {}
 
     ngOnInit(): void {
+        // reactive form for filters
         this.filterForm = this.fb.group({
             from: [''],
             to: [''],
         });
 
-        this.todoService
-            .getTodos()
-            .subscribe((todos) =>
-                this.todosSubject.next(
-                    todos.map((t) => ({ ...t, creationDate: new Date(t.creationDate) }))
-                )
+        // load todos from service
+        this.todoService.getTodos().subscribe((todos) => {
+            // ensure creationDate is Date object
+            this.todosSubject.next(
+                todos.map((t) => ({ ...t, creationDate: new Date(t.creationDate) }))
             );
+        });
     }
 
-    // FILTERS
+    // ---- filters ----
 
     applyFilters(): void {
         const raw = this.filterForm.value;
@@ -124,12 +122,13 @@ export class TodoComponent implements OnInit {
         this.filterSubject.next({ from: null, to: null });
     }
 
-    // SORTING
+    // ---- sorting ----
 
     setSort(key: SortKey): void {
         const current = this.sortSubject.value;
         const direction: SortDirection =
             current.key === key && current.direction === 'asc' ? 'desc' : 'asc';
+
         this.sortSubject.next({ key, direction });
     }
 
@@ -138,7 +137,7 @@ export class TodoComponent implements OnInit {
         return s.key === key && s.direction === dir;
     }
 
-    // SELECTION
+    // ---- selection ----
 
     toggleSelect(todo: ITodo, checked: boolean): void {
         if (checked) {
@@ -167,7 +166,7 @@ export class TodoComponent implements OnInit {
         this.allChecked = todos.length > 0 && todos.every((t) => this.selectedIds.has(t.id));
     }
 
-    // EDITING SIDEBAR
+    // ---- sidebar / description editing ----
 
     openSidebar(todo: ITodo): void {
         this.editingTodo = todo;
@@ -189,7 +188,7 @@ export class TodoComponent implements OnInit {
         this.closeSidebar();
     }
 
-    // DELETE
+    // ---- delete ----
 
     deleteTodo(todo: ITodo): void {
         const todos = this.todosSubject.value.filter((t) => t.id !== todo.id);
@@ -198,7 +197,7 @@ export class TodoComponent implements OnInit {
         this.syncAllChecked();
     }
 
-    // UTIL
+    // ---- util ----
 
     formatDate(date: Date): string {
         const d = new Date(date);

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Todos – Vanilla JS</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="card" id="main-card">
+      <!-- Desktop Filters -->
+      <div class="filters-header desktop-only">
+        <div class="filters-title">Creation Date</div>
+        <div class="filters-range">
+          <input
+            type="date"
+            id="from-date"
+            class="date-input"
+          />
+          <span class="range-separator">–</span>
+          <input
+            type="date"
+            id="to-date"
+            class="date-input"
+          />
+        </div>
+        <div class="filters-buttons">
+          <button class="btn btn-primary" id="apply-filters-btn">
+            APPLY
+          </button>
+          <button class="btn btn-secondary" id="reset-filters-btn">
+            RESET
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Filters Toggle -->
+      <div class="mobile-only mobile-filters-toggle">
+        <button class="btn btn-primary" id="open-mobile-filters">
+          FILTERS
+        </button>
+      </div>
+
+      <!-- Table Header -->
+      <div class="list-header">
+        <div class="cell checkbox-cell">
+          <input
+            type="checkbox"
+            id="select-all"
+          />
+        </div>
+        <div
+          class="cell name-cell clickable"
+          id="sort-title"
+        >
+          <span>Name</span>
+          <span class="sort-indicator">
+            <span class="arrow up" data-sort-arrow="title-asc"></span>
+            <span class="arrow down" data-sort-arrow="title-desc"></span>
+          </span>
+        </div>
+        <div
+          class="cell date-cell clickable"
+          id="sort-date"
+        >
+          <span>Creation Date</span>
+          <span class="sort-indicator">
+            <span class="arrow up" data-sort-arrow="date-asc"></span>
+            <span class="arrow down" data-sort-arrow="date-desc"></span>
+          </span>
+        </div>
+        <div class="cell delete-cell"></div>
+      </div>
+
+      <!-- Table Body -->
+      <div id="todo-list"></div>
+    </div>
+
+    <!-- Sidebar for Description Editing -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3>Description</h3>
+        <button
+          type="button"
+          class="btn btn-secondary close-btn"
+          id="close-sidebar-btn"
+        >
+          ✕ CLOSE
+        </button>
+      </div>
+
+      <textarea
+        class="description-input"
+        id="description-input"
+        rows="10"
+      ></textarea>
+
+      <div class="sidebar-actions">
+        <button class="btn btn-primary" id="save-description-btn">
+          💾 SAVE
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Filters Panel -->
+    <div class="mobile-filters-panel" id="mobile-filters-panel">
+      <div class="mobile-filters-header">
+        <span class="title">FILTERS</span>
+        <button
+          class="icon-button close-icon"
+          id="close-mobile-filters"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="mobile-filters-body">
+        <label class="field-label">Creation Date</label>
+        <input
+          type="date"
+          class="date-input"
+          id="from-date-mobile"
+        />
+        <input
+          type="date"
+          class="date-input"
+          id="to-date-mobile"
+        />
+      </div>
+
+      <div class="mobile-filters-actions">
+        <button
+          class="btn btn-primary"
+          id="apply-mobile-filters"
+        >
+          APPLY
+        </button>
+        <button
+          class="btn btn-secondary"
+          id="reset-mobile-filters"
+        >
+          RESET
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
